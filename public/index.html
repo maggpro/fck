@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fck Game</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="game-area">
+            <h1>Fck Game</h1>
+            <div class="stats">
+                <p>Clicks: <span id="clicks">0</span></p>
+                <p>Your referral code: <span id="referralCode">-</span></p>
+            </div>
+            <button id="clickButton">CLICK ME!</button>
+            <div class="referral-section">
+                <input type="text" id="referralInput" placeholder="Enter referral code">
+                <button id="submitReferral">Submit</button>
+            </div>
+        </div>
+
+        <div class="leaderboard">
+            <h2>Leaderboard</h2>
+            <div id="leaderboardList"></div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
