@@ -106,3 +106,20 @@ h1 {
         gap: 10px;
     }
 }
+
+.language-selector {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.language-selector select {
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid var(--tg-theme-button-color, #2481cc);
+    background-color: var(--tg-theme-bg-color, #ffffff);
+    color: var(--tg-theme-text-color, #000000);
+    font-size: 14px;
+    cursor: pointer;
+}

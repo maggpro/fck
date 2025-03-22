@@ -1,19 +1,24 @@
 import './styles.css';
 import axios from 'axios';
+import { translations } from './translations';
 
 const tg = window.Telegram.WebApp;
 let user = null;
+let currentLang = 'en'; // Default language
 
 // Инициализация приложения
 document.addEventListener('DOMContentLoaded', async () => {
+    // Определяем язык пользователя
+    currentLang = navigator.language.startsWith('ru') ? 'ru' : 'en';
+
     createUI();
     tg.expand();
 
     // Получаем данные пользователя
-    const initData = tg.initData;
+    const initData = tg.initData || '';
     if (initData) {
         try {
-            const response = await axios.get(`/api/user/${initData.user.id}`);
+            const response = await axios.get(`/api/user/${tg.initDataUnsafe.user.id}`);
             user = response.data;
             updateUI();
         } catch (error) {
@@ -22,21 +27,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+function t(key) {
+    return translations[currentLang][key];
+}
+
 function createUI() {
     const app = document.getElementById('app');
     app.innerHTML = `
         <div class="container">
+            <div class="language-selector">
+                <select id="langSelect">
+                    <option value="en" ${currentLang === 'en' ? 'selected' : ''}>English</option>
+                    <option value="ru" ${currentLang === 'ru' ? 'selected' : ''}>Русский</option>
+                </select>
+            </div>
             <div class="game-area">
-                <h1>Fck Game</h1>
+                <h1>${t('title')}</h1>
                 <div class="stats">
-                    <p>Clicks: <span id="clicks">0</span></p>
-                    <p>Referrals: <span id="referrals">0</span></p>
+                    <p>${t('clicks')}: <span id="clicks">0</span></p>
+                    <p>${t('referrals')}: <span id="referrals">0</span></p>
                 </div>
-                <button id="clickButton" class="primary-button">CLICK ME!</button>
+                <button id="clickButton" class="primary-button">${t('clickButton')}</button>
             </div>
 
             <div class="leaderboard">
-                <h2>Leaderboard</h2>
+                <h2>${t('leaderboard')}</h2>
                 <div id="leaderboardList"></div>
             </div>
         </div>
@@ -44,6 +59,11 @@ function createUI() {
 
     // Добавляем обработчики событий
     document.getElementById('clickButton').addEventListener('click', handleClick);
+    document.getElementById('langSelect').addEventListener('change', (e) => {
+        currentLang = e.target.value;
+        createUI();
+        updateUI();
+    });
 
     // Обновляем таблицу лидеров каждые 30 секунд
     updateLeaderboard();
@@ -83,7 +103,7 @@ async function updateLeaderboard() {
             .map((user, index) => `
                 <div class="leaderboard-item">
                     <span>${index + 1}. ${user.username}</span>
-                    <span>${user.clicks} clicks</span>
+                    <span>${user.clicks} ${t('clicks').toLowerCase()}</span>
                 </div>
             `)
             .join('');
